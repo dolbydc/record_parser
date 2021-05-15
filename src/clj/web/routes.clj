@@ -1,6 +1,7 @@
 (ns web.routes
   (:require [compojure.core :refer [defroutes GET POST]]
             [clojure.data.json :as json]
+            [clojure.java.io :refer [reader]]
             [state.state :refer [
               add-record
               get-records-sort-color
@@ -10,7 +11,7 @@
             [parser.parser :refer [parse-line-to-record]]))
 
 (defn body->str [body]
-  (let [rdr (clojure.java.io/reader body)]
+  (let [rdr (reader body)]
     (slurp rdr)))
 
 (defn handle-new-record [req]
@@ -20,7 +21,7 @@
   "OK")
 
 (defroutes routes
-  (POST "/records" req :consumes ["text/plain"] (handle-new-record req))
+  (POST "/records" req (handle-new-record req))
   (GET "/records/color" [] (json/write-str (get-records-sort-color)))
   (GET "/records/birthdate" [] (json/write-str (get-records-sort-birth)))
   (GET "/records/name" [] (json/write-str (get-records-sort-last))))

@@ -9,5 +9,8 @@
                  [clj-time "0.15.2"]]
   :clean-targets ^{:protect false} [:target-path "output"]
   :main main
+  :plugins [
+    [lein-cloverage "1.2.2"]
+    [jonase/eastwood "0.4.2"]]
   :source-paths ["src/clj"]
   :output-path "output")

@@ -4,7 +4,9 @@
                  [org.clojure/tools.cli "1.0.206"]
                  [ring/ring-jetty-adapter "1.9.3"]
                  [compojure "1.6.2"]
-                 [amperity/greenlight "0.6.0"]]
+                 [amperity/greenlight "0.6.0"]
+                 [org.clojure/data.json "2.3.0"]
+                 [clj-time "0.15.2"]]
   :clean-targets ^{:protect false} [:target-path "output"]
   :main main
   :source-paths ["src/clj"]

@@ -3,10 +3,12 @@
   (:require [clojure.pprint]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.string :as s]
+            [ring.adapter.jetty :as ring]
             [parser.parser :refer [parse-file]]
             [state.state :refer [
               add-record
-              get-records-sort-color]]))
+              get-records-sort-color]]
+            [web.routes :refer [routes]]))
 
 (def cli-options
   ;; An option with a required argument
@@ -45,4 +47,5 @@
     (doseq [f file]
       (doseq [record (parse-file f)]
         (add-record record)))
-    (println (str "state: " (get-records-sort-color)))))
+    (println (str "state: " (get-records-sort-color)))
+    (ring/run-jetty #'routes {:port 8080 :join? false})))

@@ -4,6 +4,7 @@
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.string :as s]
             [ring.adapter.jetty :as ring]
+            [output.output :as output]
             [parser.parser :refer [parse-file]]
             [state.state :refer [
               add-record
@@ -17,7 +18,7 @@
     :default []
     :update-fn conj]
    ["-s" "--sort-type <color|date|name>" "Sort by Color, birthdate or last name"
-    :default "color"
+    :default ""
     :parse-fn #(str %)]
    ["-w" "--web" "Start webservice"
     :default 0
@@ -40,9 +41,21 @@
         ]
        (s/join \newline)))
 
+(defn start-web-app []
+  (ring/run-jetty #'routes {:port 8080 :join? false}))
+
+(defn get-action [sort-type web]
+  (cond
+    (= sort-type :color) output/color-sorted
+    (= sort-type :date) output/birthdate-sorted
+    (= sort-type :name) output/lastname-sorted
+    (> web 0) start-web-app
+    :else #(println "NO-OP")))
+
 (defn -main [& args]
   (let [{:keys [options errors summary arguments]} (parse-opts args cli-options)
-        {:keys [file sort-type web]} options]
+        {:keys [file sort-type web]} options
+        action (get-action (keyword sort-type) web)]
     (cond
       (:help options) (exit 0 (usage summary))
       errors (do (println errors) (System/exit 1)))
@@ -50,6 +63,5 @@
     (doseq [f file]
       (doseq [record (parse-file f)]
         (add-record record)))
-    (println (str "state: " (get-records-sort-color)))
-    (when (> web 0)
-      (ring/run-jetty #'routes {:port 8080 :join? false}))))
+
+    (action)))

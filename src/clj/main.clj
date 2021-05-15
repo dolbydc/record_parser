@@ -2,13 +2,18 @@
   (:gen-class)
   (:require [clojure.pprint]
             [clojure.tools.cli :refer [parse-opts]]
-            [clojure.string :as s]))
+            [clojure.string :as s]
+            [parser.parser :refer [parse-file]]
+            [state.state :refer [
+              add-record
+              get-records-sort-color]]))
 
 (def cli-options
   ;; An option with a required argument
-  [["-i" "--input <input file>" "File to read in and parse into records"
-    :default "input.csv"
-    :parse-fn #(str %)]
+  [["-f" "--file <input file>" "File to read in and parse into records"
+    :multi true
+    :default []
+    :update-fn conj]
    ["-s" "--sort-type <color|date|name>" "Sort by Color, birthdate or last name"
     :default "color"
     :parse-fn #(str %)]
@@ -32,10 +37,12 @@
 
 (defn -main [& args]
   (let [{:keys [options errors summary arguments]} (parse-opts args cli-options)
-        {:keys [input sort-type]} options]
+        {:keys [file sort-type]} options]
     (cond
       (:help options) (exit 0 (usage summary))
       errors (do (println errors) (System/exit 1)))
 
-    (let [f (clojure.java.io/file input)]
-      (println f))))
+    (doseq [f file]
+      (doseq [record (parse-file f)]
+        (add-record record)))
+    (println (str "state: " (get-records-sort-color)))))

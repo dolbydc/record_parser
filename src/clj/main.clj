@@ -19,6 +19,9 @@
    ["-s" "--sort-type <color|date|name>" "Sort by Color, birthdate or last name"
     :default "color"
     :parse-fn #(str %)]
+   ["-w" "--web" "Start webservice"
+    :default 0
+    :update-fn inc]
    ["-h" "--help"]])
 
 (defn exit [status msg]
@@ -39,7 +42,7 @@
 
 (defn -main [& args]
   (let [{:keys [options errors summary arguments]} (parse-opts args cli-options)
-        {:keys [file sort-type]} options]
+        {:keys [file sort-type web]} options]
     (cond
       (:help options) (exit 0 (usage summary))
       errors (do (println errors) (System/exit 1)))
@@ -48,4 +51,5 @@
       (doseq [record (parse-file f)]
         (add-record record)))
     (println (str "state: " (get-records-sort-color)))
-    (ring/run-jetty #'routes {:port 8080 :join? false})))
+    (when (> web 0)
+      (ring/run-jetty #'routes {:port 8080 :join? false}))))

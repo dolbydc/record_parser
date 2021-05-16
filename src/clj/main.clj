@@ -6,8 +6,7 @@
             [ring.adapter.jetty :as ring]
             [output.output :as output]
             [parser.parser :refer [parse-file]]
-            [state.state :refer [records-state
-                                 add-record]]
+            [state.state :refer [add-record]]
             [web.routes :refer [setup-routes]]))
 
 (def cli-options
@@ -39,20 +38,21 @@
         options-summary]
        (s/join \newline)))
 
-(defn start-web-app []
+(defn start-web-app [records-state]
   (ring/run-jetty (setup-routes records-state) {:port 8080 :join? false}))
 
 (defn get-action [sort-type web]
   (cond
-    (= sort-type :color) #(println (output/color-sorted records-state))
-    (= sort-type :date) #(println (output/birthdate-sorted records-state))
-    (= sort-type :name) #(println (output/lastname-sorted records-state))
+    (= sort-type :color) #(println (output/color-sorted %))
+    (= sort-type :date) #(println (output/birthdate-sorted %))
+    (= sort-type :name) #(println (output/lastname-sorted %))
     (> web 0) start-web-app
     :else #(println "NO-OP")))
 
 (defn -main [& args]
   (let [{:keys [options errors summary arguments]} (parse-opts args cli-options)
         {:keys [file sort-type web]} options
+        records-state (atom [])
         action (get-action (keyword sort-type) web)]
     (cond
       (:help options) (exit 0 (usage summary))
@@ -62,4 +62,4 @@
       (doseq [record (parse-file f)]
         (add-record records-state record)))
 
-    (action)))
+    (action records-state)))

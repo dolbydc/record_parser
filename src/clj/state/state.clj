@@ -1,7 +1,5 @@
 (ns state.state)
 
-(def records-state (atom []))
-
 (defn add-record [state record]
   (swap! state conj record))
 

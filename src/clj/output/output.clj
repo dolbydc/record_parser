@@ -1,21 +1,23 @@
 (ns output.output
-  (:require [state.state :refer [
+  (:require
+    [state.state :refer [
       get-records-sort-color
       get-records-sort-birth
-      get-records-sort-last]]))
+      get-records-sort-last]]
+    [clojure.string :refer [join]]))
 
 (defn record-to-csv [record]
   (-> (reduce (fn [accum [key value]] (str accum "," value)) "" record)
       (subs 1)))
 
-(defn color-sorted []
-  (doseq [r (get-records-sort-color)]
-    (println (record-to-csv r))))
+(defn output-csv [sorted-records]
+  (join "\n" (map record-to-csv sorted-records)))
 
-(defn birthdate-sorted []
-  (doseq [r (get-records-sort-birth)]
-    (println (record-to-csv r))))
+(defn color-sorted [state]
+  (output-csv (get-records-sort-color state)))
 
-(defn lastname-sorted []
-  (doseq [r (get-records-sort-last)]
-    (println (record-to-csv r))))
+(defn birthdate-sorted [state]
+  (output-csv (get-records-sort-birth state)))
+
+(defn lastname-sorted [state]
+  (output-csv (get-records-sort-last state)))

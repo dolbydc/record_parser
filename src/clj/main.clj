@@ -7,8 +7,8 @@
             [output.output :as output]
             [parser.parser :refer [parse-file]]
             [state.state :refer [
-              add-record
-              get-records-sort-color]]
+              records-state
+              add-record]]
             [web.routes :refer [routes]]))
 
 (def cli-options
@@ -46,9 +46,9 @@
 
 (defn get-action [sort-type web]
   (cond
-    (= sort-type :color) output/color-sorted
-    (= sort-type :date) output/birthdate-sorted
-    (= sort-type :name) output/lastname-sorted
+    (= sort-type :color) #(println (output/color-sorted records-state))
+    (= sort-type :date) #(println (output/birthdate-sorted records-state))
+    (= sort-type :name) #(println (output/lastname-sorted records-state))
     (> web 0) start-web-app
     :else #(println "NO-OP")))
 
@@ -62,6 +62,6 @@
 
     (doseq [f file]
       (doseq [record (parse-file f)]
-        (add-record record)))
+        (add-record records-state record)))
 
     (action)))

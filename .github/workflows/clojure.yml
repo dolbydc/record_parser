@@ -17,6 +17,8 @@ jobs:
       run: lein deps
     - name: Run Linting
       run: lein eastwood
+    - name: Run Code Format Checking
+      run: lein cljfmt check
     - name: Run tests
       run: lein cloverage
 

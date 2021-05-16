@@ -6,9 +6,8 @@
             [ring.adapter.jetty :as ring]
             [output.output :as output]
             [parser.parser :refer [parse-file]]
-            [state.state :refer [
-              records-state
-              add-record]]
+            [state.state :refer [records-state
+                                 add-record]]
             [web.routes :refer [setup-routes]]))
 
 (def cli-options
@@ -37,8 +36,7 @@
         "Usage: record-parse [options]"
         ""
         "Options:"
-        options-summary
-        ]
+        options-summary]
        (s/join \newline)))
 
 (defn start-web-app []

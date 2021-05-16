@@ -1,10 +1,9 @@
 (ns output.output
   (:require
-    [state.state :refer [
-      get-records-sort-color
-      get-records-sort-birth
-      get-records-sort-last]]
-    [clojure.string :refer [join]]))
+   [state.state :refer [get-records-sort-color
+                        get-records-sort-birth
+                        get-records-sort-last]]
+   [clojure.string :refer [join]]))
 
 (defn record-to-csv [record]
   (-> (reduce (fn [accum [key value]] (str accum "," value)) "" record)

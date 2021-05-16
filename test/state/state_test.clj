@@ -11,9 +11,9 @@
     (state/add-record state (parser/parse-line-to-record "Andersen,Mr,ma@mail.com,yellow,11/27/1900"))
     (is (= (count @state) 4))
     (let [color-sorted (state/get-records-sort-color state)
-            birth-sorted (state/get-records-sort-birth state)
-            name-sorted (state/get-records-sort-last state)]
+          birth-sorted (state/get-records-sort-birth state)
+          name-sorted (state/get-records-sort-last state)]
         ; color storted check
-        (is (= (vec (map :last-name color-sorted)) ["Johnson" "Palingo" "Dolby" "Andersen"]))
-        (is (= (vec (map :last-name birth-sorted)) ["Palingo" "Andersen" "Dolby" "Johnson"]))
-        (is (= (vec (map :last-name name-sorted)) ["Palingo" "Johnson" "Dolby" "Andersen"])))))
+      (is (= (vec (map :last-name color-sorted)) ["Johnson" "Palingo" "Dolby" "Andersen"]))
+      (is (= (vec (map :last-name birth-sorted)) ["Palingo" "Andersen" "Dolby" "Johnson"]))
+      (is (= (vec (map :last-name name-sorted)) ["Palingo" "Johnson" "Dolby" "Andersen"])))))

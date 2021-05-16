@@ -51,5 +51,4 @@
     (let [response (routes {:request-method :get
                             :uri "/records/name"})]
       (is (= 200 (:status response)))
-      (println (:body response))
       (is (= (compare (:body response) LASTNAME-SORTED-EXPECTED) 0)))))

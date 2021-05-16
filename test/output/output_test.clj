@@ -7,7 +7,7 @@
 (deftest record-to-csv-test
   (let [line "Dolby|Donevan|dd@mail.com|green|5/21/1901"
         rec (parser/parse-line-to-record line)]
-    (is (= (compare (output/record-to-csv rec) "Dolby,Donevan,dd@mail.com,green,5/21/1901")))))
+    (is (= (compare (output/record-to-csv rec) "Dolby,Donevan,dd@mail.com,green,5/21/1901") 0))))
 
 (def COLOR_SORTED "Johnson,John,jj@mail.com,blue,11/27/1930
 Palingo,Cindy,dc@mail.com,blue,11/27/1900

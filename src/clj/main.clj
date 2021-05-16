@@ -9,7 +9,7 @@
             [state.state :refer [
               records-state
               add-record]]
-            [web.routes :refer [routes]]))
+            [web.routes :refer [setup-routes]]))
 
 (def cli-options
   ;; An option with a required argument
@@ -42,7 +42,7 @@
        (s/join \newline)))
 
 (defn start-web-app []
-  (ring/run-jetty #'routes {:port 8080 :join? false}))
+  (ring/run-jetty (setup-routes records-state) {:port 8080 :join? false}))
 
 (defn get-action [sort-type web]
   (cond

@@ -4,10 +4,7 @@
             [state.state :as state]
             [clojure.test :refer [deftest is]]))
 
-(deftest record-to-csv-test
-  (let [line "Dolby|Donevan|dd@mail.com|green|5/21/1901"
-        rec (parser/parse-line-to-record line)]
-    (is (= (compare (output/record-to-csv rec) "Dolby,Donevan,dd@mail.com,green,5/21/1901") 0))))
+(def EXPECTED_CSV "Dolby,Donevan,dd@mail.com,green,5/21/1901,1901-05-21T00:00:00.000Z")
 
 (def COLOR_SORTED "Johnson,John,jj@mail.com,blue,11/27/1930
 Palingo,Cindy,dc@mail.com,blue,11/27/1900
@@ -23,6 +20,11 @@ Johnson,John,jj@mail.com,blue,11/27/1930")
 Johnson,John,jj@mail.com,blue,11/27/1930
 Dolby,Donevan,dd@mail.com,green,5/21/1901
 Andersen,Mr,ma@mail.com,yellow,11/27/1900")
+
+(deftest record-to-csv-test
+  (let [line "Dolby|Donevan|dd@mail.com|green|5/21/1901"
+        rec (parser/parse-line-to-record line)]
+    (is (= (compare (output/record-to-csv rec) EXPECTED_CSV) 0))))
 
 (deftest color-sorted-test
   (let [local-state (atom [])]
